@@ -97,15 +97,8 @@ def new_highlighter() -> BMLHighlighter:
 
     for kwd, f in patterns.items():
         if f.pattern is None or f.text_format is None:
-            logger.warn("Keyword '{0}' has no: {1}, {2}".format(
-                kwd,
-                "pattern" if f.pattern is None else ' ',
-                "format" if f.text_format is None else '\b',
-            ))
-
             continue
 
-        logger.info(f"Adding Mapping: {f.pattern}: {f.text_format}")
         syntax_highlighter.add_mapping(f.pattern, f.text_format)
 
     return syntax_highlighter
