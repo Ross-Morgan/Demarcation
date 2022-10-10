@@ -67,6 +67,7 @@ def new_highlighter() -> BMLHighlighter:
         "paren": None,
         "set_name": None,
         "arrow": None,
+        "mod": None,
     }
 
     for kwd in patterns:
@@ -82,6 +83,7 @@ def new_highlighter() -> BMLHighlighter:
     patterns["`sym"].pattern = pattern(r"(?<!\S)`\w+")
     patterns["set_name"].pattern = pattern(r"(?<=^set )\w+")
     patterns["arrow"].pattern = pattern(r"(?<!\S)=>(?!\S)")
+    patterns["mod"].pattern = pattern(r"(?<!\S)mod(?!\w+)")
 
     patterns["set"].text_format = fmt(COLOUR.darkCyan)
     patterns["func"].text_format = fmt(COLOUR.darkCyan)
@@ -92,6 +94,7 @@ def new_highlighter() -> BMLHighlighter:
     patterns["`sym"].text_format = fmt(COLOUR.green)
     patterns["set_name"].text_format = fmt(COLOUR.green)
     patterns["arrow"].text_format = fmt(COLOUR.gray)
+    patterns["mod"].text_format = fmt(COLOUR.red)
 
     syntax_highlighter = BMLHighlighter()
 
