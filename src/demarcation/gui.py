@@ -1,6 +1,6 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-from . import highlighter, logo
+from . import highlighter, icon
 
 
 class EditorWidget(QtWidgets.QWidget):
@@ -35,9 +35,10 @@ class EditorAppWindow(QtWidgets.QMainWindow):
 
         self.setWindowTitle("Demarcation")
 
-        ba = QtCore.QByteArray.fromRawData()
+        p = QtGui.QPixmap()
+        p.loadFromData(icon.icon_data)
 
-        self.setWindowIcon(QtGui.QIcon(QtGui.QPixmap.loadFromData(icon_bytes)))  # noqa
+        self.setWindowIcon(QtGui.QIcon(p))  # noqa
 
         e = EditorWidget()
 
@@ -52,6 +53,21 @@ class EditorAppWindow(QtWidgets.QMainWindow):
         menu_bar = self.menuBar()
 
         file_menu = QtWidgets.QMenu("&File", self)
-        edit_menu = menu_bar.addMenu("&Edit")
-        scts_menu = menu_bar.addMenu("&Shortcuts")
-        help_menu = menu_bar.addMenu("&Help")
+        edit_menu = menu_bar.addMenu("&Edit")          # noqa NOSONAR
+        scts_menu = menu_bar.addMenu("&Shortcuts")     # noqa NOSONAR
+        help_menu = menu_bar.addMenu("&Help")          # noqa NOSONAR
+
+        open_action = QtWidgets.QAction("Open", self)
+        save_action = QtWidgets.QAction("Save", self)
+
+        open_action.triggered.connect(self.open_file)
+        save_action.triggered.connect(self.save_file)
+
+        file_menu.addAction(open_action)
+        file_menu.addAction(save_action)
+
+    def open_file(self):
+        print("Opening file...")
+
+    def save_file(self):
+        print("Saving file...")

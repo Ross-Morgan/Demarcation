@@ -1,6 +1,6 @@
 import sys
 
-from PyQt6 import QtWidgets
+from PyQt5 import QtWidgets
 
 import demarcation
 

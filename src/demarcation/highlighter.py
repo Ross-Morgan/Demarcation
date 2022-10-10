@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 
-from PyQt6 import QtCore, QtGui
+from PyQt5 import QtCore, QtGui
 
 from .logger import AppLogger
 
@@ -73,9 +73,9 @@ def new_highlighter() -> BMLHighlighter:
         if patterns[kwd] is None:
             patterns[kwd] = PatternFormat()
 
-    patterns["set"].pattern = pattern(r"^set(?!\w+)")
-    patterns["func"].pattern = pattern(r"\w+(?=\(\w+\*)")
-    patterns["for"].pattern = pattern(r"(?<=\s)for(?=\s*)")
+    patterns["set"].pattern = pattern(r"(?<=^\s*)set(?!\w+)")
+    patterns["func"].pattern = pattern(r"(?<=^\s*)\w+(?=\(\w+\*)")
+    patterns["for"].pattern = pattern(r"(?<=(\s+|))for(?=\s*)")
     patterns["exists"].pattern = pattern(r"(?<=\s)exists(?!\w+)")
     patterns["paren"].pattern = pattern(r"[()\[\]{}]")
     patterns["`sym"].pattern = pattern(r"`\w+")
