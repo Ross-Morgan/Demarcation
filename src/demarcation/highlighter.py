@@ -1,7 +1,7 @@
 import re
 from dataclasses import dataclass
 
-from PyQt5 import QtCore, QtGui
+from PyQt6 import QtCore, QtGui
 
 from .logger import AppLogger
 
@@ -48,6 +48,7 @@ def new_highlighter() -> BMLHighlighter:
         "for": None,
         "exists": None,
         "matrix": None,
+        "and": None,
         "set": None,
         "func": None,
         "subset": None,
@@ -56,7 +57,6 @@ def new_highlighter() -> BMLHighlighter:
         "intersection": None,
         "difference": None,
         "mod": None,
-        "=>": None,
         "√": None,
         "+": None,
         "-": None,
@@ -73,17 +73,19 @@ def new_highlighter() -> BMLHighlighter:
         if patterns[kwd] is None:
             patterns[kwd] = PatternFormat()
 
-    patterns["set"].pattern = pattern(r"(?<=^\s*)set(?!\w+)")
-    patterns["func"].pattern = pattern(r"(?<=^\s*)\w+(?=\(\w+\*)")
-    patterns["for"].pattern = pattern(r"(?<=(\s+|))for(?=\s*)")
-    patterns["exists"].pattern = pattern(r"(?<=\s)exists(?!\w+)")
+    patterns["set"].pattern = pattern(r"(?<!\S)set(?!\w+)")
+    patterns["func"].pattern = pattern(r"(?<!\S)\w+(?=\(\w+\*)")
+    patterns["and"].pattern = pattern(r"(?<!\S)and(?!\w+)")
+    patterns["for"].pattern = pattern(r"(?<!\S)for(?=\s*)")
+    patterns["exists"].pattern = pattern(r"(?<!\S)exists(?!\w+)")
     patterns["paren"].pattern = pattern(r"[()\[\]{}]")
-    patterns["`sym"].pattern = pattern(r"`\w+")
+    patterns["`sym"].pattern = pattern(r"(?<!\S)`\w+")
     patterns["set_name"].pattern = pattern(r"(?<=^set )\w+")
-    patterns["arrow"].pattern = pattern(r"(?<=\s)=>(?=\s?)")
+    patterns["arrow"].pattern = pattern(r"(?<!\S)=>(?!\S)")
 
     patterns["set"].text_format = fmt(COLOUR.darkCyan)
     patterns["func"].text_format = fmt(COLOUR.darkCyan)
+    patterns["and"].text_format = fmt(COLOUR.cyan)
     patterns["for"].text_format = fmt(COLOUR.red)
     patterns["exists"].text_format = fmt(COLOUR.red)
     patterns["paren"].text_format = fmt(COLOUR.yellow)

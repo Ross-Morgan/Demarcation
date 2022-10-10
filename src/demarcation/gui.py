@@ -1,6 +1,10 @@
-from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt6 import QtCore, QtGui, QtWidgets
 
 from . import highlighter, icon
+from .logger import AppLogger
+
+
+logger = AppLogger("logger")
 
 
 class EditorWidget(QtWidgets.QWidget):
@@ -8,6 +12,8 @@ class EditorWidget(QtWidgets.QWidget):
         super().__init__(parent)
 
         self.setStyleSheet("QWidget { font-size: 30px; }")
+
+        self.font_size = 30
 
         self.layout = QtWidgets.QVBoxLayout()
         self.setLayout(self.layout)
@@ -35,6 +41,8 @@ class EditorAppWindow(QtWidgets.QMainWindow):
 
         self.setWindowTitle("Demarcation")
 
+        self.setMinimumSize(640, 480)
+
         p = QtGui.QPixmap()
         p.loadFromData(icon.icon_data)
 
@@ -50,24 +58,47 @@ class EditorAppWindow(QtWidgets.QMainWindow):
         self.setup_menu()
 
     def setup_menu(self):
-        menu_bar = self.menuBar()
+        grid = QtWidgets.QGridLayout()
 
-        file_menu = QtWidgets.QMenu("&File", self)
-        edit_menu = menu_bar.addMenu("&Edit")          # noqa NOSONAR
-        scts_menu = menu_bar.addMenu("&Shortcuts")     # noqa NOSONAR
-        help_menu = menu_bar.addMenu("&Help")          # noqa NOSONAR
+        menu_bar = QtWidgets.QMenuBar()
+        grid.addWidget(menu_bar, 0, 0)
 
-        open_action = QtWidgets.QAction("Open", self)
-        save_action = QtWidgets.QAction("Save", self)
+        open_action = QtGui.QAction("Open")
+        open_action.setShortcut("ctrl+o")
 
-        open_action.triggered.connect(self.open_file)
-        save_action.triggered.connect(self.save_file)
+        save_action = QtGui.QAction("Save")
+        save_action.setShortcut("ctrl+s")
 
+        save_as_action = QtGui.QAction("Save As")
+        save_as_action.setShortcut("ctrl+shift+s")
+
+        quit_action = QtGui.QAction("Quit")
+        quit_action.setShortcut("ctrl+shift+q")
+
+        file_menu = menu_bar.addMenu("&File")
         file_menu.addAction(open_action)
         file_menu.addAction(save_action)
+        file_menu.addAction(save_as_action)
+        file_menu.addSeparator()
+        file_menu.addAction(quit_action)
+
+        file_menu.triggered.connect(self.handle_file_event)
+
+        self.setLayout(grid)
+
+    def handle_file_event(self, action: QtGui.QAction):
+        match action.text().lower():
+            case "open":
+                self.open_file()
+            case "save":
+                self.save_file()
+            case _:
+                logger.error(f"Unhandled file event: '{action.text()}'")
 
     def open_file(self):
         print("Opening file...")
 
     def save_file(self):
-        print("Saving file...")
+        dialog = QtWidgets.QFileDialog.getOpenFileName(directory="~")
+
+        print(dialog)
