@@ -42,7 +42,7 @@ class EditorAppWindow(QtWidgets.QMainWindow):
 
         self.setMinimumSize(640, 480)
 
-        self.setWindowIcon(QtGui.QIcon(os.path.normpath(f"{__file__}/../../../assets/demarcation-logo.png")))  # noqa
+        self.setWindowIcon(QtGui.QIcon(os.path.normpath("demarcation-logo.png")))  # noqa
 
         self.editor = EditorWidget()
 
@@ -95,6 +95,9 @@ class EditorAppWindow(QtWidgets.QMainWindow):
 
         open_path = dialog[0]
 
+        if not os.path.exists(open_path):
+            return
+
         with open(open_path, "r") as f:
             self.editor.text_box.setPlainText(f.read())
 
@@ -102,6 +105,9 @@ class EditorAppWindow(QtWidgets.QMainWindow):
         dialog = QtWidgets.QFileDialog.getSaveFileName(directory=os.path.normpath(f"{pathlib.Path.home()}/Documents/untitled.bml"))  # noqa
 
         save_path = dialog[0]
+
+        if not pathlib.Path(save_path).parent.is_dir():  # noqa
+            return
 
         with open(save_path, "w") as f:
             f.write(self.editor.text_box.toPlainText())
